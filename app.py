@@ -780,7 +780,7 @@ def directivo():
 def editar_directivo(numero_empleado):
     cur = mysql.connection.cursor()
 
-    if request.method == ['POST']:
+    if request.method == 'POST':
         nombre = request.form.get('nombre')
         puesto = request.form.get('puesto')
 
