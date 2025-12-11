@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú Principal - CECYTEM</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+
+  <style>
+  /* ==== Estilos generales ==== */
+  body {
+    margin: 0;
+    padding: 0;
+    background: #f8f9fa;
+  }
+
+  main.menu-container {
+    margin-top: 80px;
+    padding-bottom: 50px;
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 🔹 4 columnas fijas */
+    gap: 30px; /* 🔹 más espacio entre cuadros */
+    margin-top: 40px;
+    justify-items: center;
+  }
+
+  .menu-item {
+    width: 220px; /* 🔹 más grandes */
+    height: 220px;
+    text-align: center;
+    background: #f5f5f5;
+    border-radius: 20px;
+    padding: 25px;
+    transition: transform 0.2s, box-shadow 0.3s;
+    text-decoration: none;
+    color: #333;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .menu-item:hover {
+    transform: scale(1.06);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+  }
+
+  .menu-item img {
+    width: 110px;
+    height: 110px;
+    margin-bottom: 10px;
+  }
+
+  /* ==== Estilo para bloqueados ==== */
+  .bloqueado {
+    position: relative;
+    cursor: not-allowed;
+    filter: grayscale(1);
+  }
+
+  .bloqueado::after {
+    content: "🔒";
+    color: red;
+    font-size: 32px;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+  }
+
+  /* ==== Animación de shake ==== */
+  @keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+  }
+
+  .shake {
+    animation: shake 0.4s;
+  }
+
+  /* ==== Ajuste del enlace de cerrar sesión ==== */
+  .link {
+    text-decoration: none;
+    color: #1b5e20;
+    font-weight: bold;
+  }
+</style>
+
+</head>
+<body>
+  <header class="menu-header">
+    <div class="header-content">
+      <img src="{{ url_for('static', filename='img/logo_cecytem.png') }}" alt="Logo CECYTEM" class="menu-logo">
+      <div>
+        <h1>Plataforma Institucional CECYTEM</h1>
+        <p>Selecciona una de las siguientes secciones para continuar</p>
+        <p style="color:#1b5e20; font-weight:bold;">Has iniciado como: {{ session['tipo_usuario']|capitalize }}</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="menu-container">
+    <div class="menu-grid">
+      {% set rol = session['tipo_usuario'] %}
+
+      <!-- PROFESOR -->
+      <a href="/profesor" class="menu-item {% if rol not in ['directivo'] %}bloqueado{% endif %}">
+        <img src="{{ url_for('static', filename='img/profesor.png') }}" alt="Profesor">
+        <h2>Profesores</h2>
+      </a>
+
+      <!-- ALUMNO -->
+      <a href="/alumno" class="menu-item {% if rol not in ['directivo'] %}bloqueado{% endif %}">
+        <img src="{{ url_for('static', filename='img/alumno.png') }}" alt="Alumno">
+        <h2>Alumnos</h2>
+      </a>
+
+      <!-- ORIENTADOR -->
+      <a href="/orientador" class="menu-item {% if rol not in ['directivo'] %}bloqueado{% endif %}">
+        <img src="{{ url_for('static', filename='img/orientador.png') }}" alt="Orientador">
+        <h2>Orientadores</h2>
+      </a>
+
+      <!-- DIRECTIVO -->
+      <a href="/directivo" class="menu-item {% if rol != 'directivo' %}bloqueado{% endif %}">
+        <img src="{{ url_for('static', filename='img/directivo.png') }}" alt="Directivo">
+        <h2>Directivos</h2>
+      </a>
+
+      <!-- MATERIA -->
+      <a href="/materia" class="menu-item {% if rol not in ['directivo'] %}bloqueado{% endif %}">
+        <img src="{{ url_for('static', filename='img/materia.png') }}" alt="Materia">
+        <h2>Materia</h2>
+      </a>
+
+      <!-- RECURSOS -->
+      <a href="/recursos" class="menu-item {% if rol not in ['orientador','profesor','directivo'] %}bloqueado{% endif %}">
+        <img src="{{ url_for('static', filename='img/recursos.png') }}" alt="Recursos">
+        <h2>Recursos</h2>
+      </a>
+
+      <!-- CHAT -->
+      <a href="/chat" class="menu-item {% if rol not in ['alumno','orientador','profesor','directivo'] %}bloqueado{% endif %}">
+        <img src="{{ url_for('static', filename='img/chat.png') }}" alt="Chat">
+        <h2>Chat</h2>
+      </a>
+
+      <!-- CREAR CUENTA -->
+      <a href="/crear_cuenta" class="menu-item {% if rol not in ['directivo'] %}bloqueado{% endif %}">
+        <img src="{{ url_for('static', filename='img/crear_cuenta.png') }}" alt="Crear Cuenta">
+        <h2>Crear Cuenta</h2>
+      </a>
+
+<a href="/buscar" 
+   style="position:fixed; bottom:20px; right:20px;
+          background:#4CAF50; color:white; padding:10px 20px;
+          border-radius:50px; text-decoration:none;">
+    🔍 Buscar recursos
+</a>
+
+    </div>
+
+    <p style="margin-top:50px;"><a href="/login" class="link">Cerrar sesión</a></p>
+  </main>
+
+  <footer class="menu-footer">
+    <p>© 2025 Colegio de Estudios Científicos y Tecnológicos del Estado de México</p>
+  </footer>
+
+  <script>
+    // Detectar clics en enlaces bloqueados
+    document.querySelectorAll('.bloqueado').forEach(item => {
+      item.addEventListener('click', e => {
+        e.preventDefault();
+        item.classList.add('shake');
+        setTimeout(() => item.classList.remove('shake'), 400);
+      });
+    });
+
+    // Cerrar sesión por inactividad
+    let tiempoInactivo;
+    function reiniciarTiempo() {
+      clearTimeout(tiempoInactivo);
+      tiempoInactivo = setTimeout(() => {
+        alert("Sesión cerrada por inactividad.");
+        window.location.href = "/";
+      }, 180000);
+    }
+    window.onload = reiniciarTiempo;
+    document.onmousemove = reiniciarTiempo;
+    document.onkeypress = reiniciarTiempo;
+    document.onclick = reiniciarTiempo;
+    document.onscroll = reiniciarTiempo;
+  </script>
+</body>
+</html>

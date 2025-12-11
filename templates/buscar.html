@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Buscador general</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f1f8e9;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .search-box {
+            background-color: #ffffff;
+            border: 2px solid #A5D6A7;
+            border-radius: 15px;
+            padding: 20px;
+            width: 80%;
+            margin: auto;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            background: #2E7D32;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 0;
+        }
+
+        input[type="text"] {
+            width: 60%;
+            padding: 10px;
+            border-radius: 12px 0 0 12px;
+            border: 2px solid #A5D6A7;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            background-color: #2E7D32;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 0 12px 12px 0;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background-color: #1B5E20;
+        }
+
+        ul { list-style: none; padding: 0; }
+
+        li {
+            background-color: #f1f8e9;
+            border: 2px solid #A5D6A7;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+
+        a {
+            color: #2E7D32;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        a:hover { text-decoration: underline; }
+
+        .no-result {
+            text-align: center;
+            padding: 10px;
+            color: #d00609;
+            font-weight: bold;
+        }
+
+        .btn-regresar {
+            display: inline-block;
+            background:#4CAF50;
+            color:white;
+            padding:10px 20px;
+            border-radius:50px;
+            text-decoration:none;
+            font-weight:bold;
+            margin-top: 20px;
+        }
+
+        .btn-descargar {
+            display: inline-block;
+            background: #388E3C;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+
+        .btn-descargar:hover {
+            background: #1B5E20;
+        }
+    </style>
+
+</head>
+<body>
+
+<!-- BUSCADOR DE RECURSOS -->
+<div class="search-box">
+    <h2>Búsqueda de recursos</h2>
+    <form action="/buscar" method="GET">
+        <input type="text" name="q" placeholder="Buscar recurso..." value="{{ termino }}">
+        <button type="submit">Buscar</button>
+        <button type="button" id="btnVozRecursos" style="margin-left:8px;">🎤 Voz</button>
+    </form>
+
+    <hr>
+
+    {% if resultados %}
+        <h3 style="text-align:center;">Resultados:</h3>
+        <ul>
+            {% for item in resultados %}
+                <li>
+                    <b>{{ item.nombre }}</b><br>
+                    {{ item.docente }} — {{ item.materia }}<br>
+                    <a href="/uploads/{{ item.archivo }}">📄 Ver archivo</a>
+                    <a href="/uploads/{{ item.archivo }}" download class="btn-descargar">⬇ Descargar</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-result">No se encontraron resultados.</p>
+    {% endif %}
+</div>
+
+<!-- BUSCADOR DE ALUMNOS -->
+<div class="search-box">
+    <h2>Búsqueda de alumnos</h2>
+    <form action="/buscar_alumno" method="GET">
+        <input type="text" name="q" placeholder="Buscar por CURP, nombre, grupo..." value="{{ termino_alumno }}">
+        <button type="submit">Buscar</button>
+        <button type="button" id="btnVozAlumnos" style="margin-left:8px;">🎤 Voz</button>
+    </form>
+
+    <hr>
+
+    {% if alumnos %}
+        <h3 style="text-align:center;">Resultados de alumnos:</h3>
+        <ul>
+            {% for a in alumnos %}
+                <li>
+                    <b>{{ a.nombre }} {{ a.apellido_paterno }} {{ a.apellido_materno }}</b><br>
+                    CURP: {{ a.curp }}<br>
+                    Turno: {{ a.turno }} — Grupo: {{ a.grupo }} — Semestre: {{ a.semestre }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-result">No se encontraron alumnos.</p>
+    {% endif %}
+</div>
+
+<!-- BUSCADOR DE PROFESORES -->
+<div class="search-box">
+    <h2>Búsqueda de profesores</h2>
+    <form action="/buscar_profesor" method="GET">
+        <input type="text" name="q" placeholder="Buscar por nombre, número de empleado, asignatura..." value="{{ termino_profesor }}">
+        <button type="submit">Buscar</button>
+        <button type="button" id="btnVozProfesores" style="margin-left:8px;">🎤 Voz</button>
+    </form>
+
+    <hr>
+
+    {% if profesores %}
+        <h3 style="text-align:center;">Resultados de profesores:</h3>
+        <ul>
+            {% for p in profesores %}
+                <li>
+                    <b>{{ p.nombre_docente }}</b><br>
+                    Número de empleado: {{ p.numero_empleado }}<br>
+                    Fecha de ingreso: {{ p.fecha_ingreso }}<br>
+                    Perfil: {{ p.perfil_profesional }}<br>
+                    Asignatura: {{ p.asignatura }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-result">No se encontraron profesores.</p>
+    {% endif %}
+</div>
+
+<!-- BUSCADOR DE ORIENTADORES -->
+<div class="search-box">
+    <h2>Búsqueda de orientadores</h2>
+    <form action="/buscar_orientador" method="GET">
+        <input type="text" name="q" placeholder="Buscar por número de empleado, nombre o grupo..." value="{{ termino_orientador }}">
+        <button type="submit">Buscar</button>
+        <button type="button" id="btnVozOrientadores" style="margin-left:8px;">🎤 Voz</button>
+    </form>
+
+    <hr>
+
+    {% if orientadores %}
+        <h3 style="text-align:center;">Resultados de orientadores:</h3>
+        <ul>
+            {% for o in orientadores %}
+                <li>
+                    <b>{{ o.nombre }}</b><br>
+                    Número de empleado: {{ o.numero_empleado }}<br>
+                    Grupos que atiende: {{ o.grupos_atendidos }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-result">No se encontraron orientadores.</p>
+    {% endif %}
+</div>
+
+<!-- BUSCADOR DE DIRECTIVOS -->
+<div class="search-box">
+    <h2>Búsqueda de directivos</h2>
+    <form action="/buscar_directivo" method="GET">
+        <input type="text" name="q" placeholder="Buscar por número de empleado, nombre o puesto..." value="{{ termino_directivo }}">
+        <button type="submit">Buscar</button>
+        <button type="button" id="btnVozDirectivos" style="margin-left:8px;">🎤 Voz</button>
+    </form>
+
+    <hr>
+
+    {% if directivos %}
+        <h3 style="text-align:center;">Resultados de directivos:</h3>
+        <ul>
+            {% for d in directivos %}
+                <li>
+                    <b>{{ d.nombre }}</b><br>
+                    Número de empleado: {{ d.numero_empleado }}<br>
+                    Puesto: {{ d.puesto }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-result">No se encontraron directivos.</p>
+    {% endif %}
+</div>
+
+<!-- BUSCADOR DE MATERIAS -->
+<div class="search-box">
+    <h2>Búsqueda de materias</h2>
+    <form action="/buscar_materia" method="GET">
+        <input type="text" name="q" placeholder="Buscar por estructura curricular, nombre, horas o créditos..." value="{{ termino_materia }}">
+        <button type="submit">Buscar</button>
+        <button type="button" id="btnVozMaterias" style="margin-left:8px;">🎤 Voz</button>
+    </form>
+
+    <hr>
+
+    {% if materias %}
+        <h3 style="text-align:center;">Resultados de materias:</h3>
+        <ul>
+            {% for m in materias %}
+                <li>
+                    <b>{{ m.nombre_materia }}</b><br>
+                    Estructura curricular: {{ m.estructura_curricular }} <br>
+                    Horas por semana: {{ m.horas_semana }} <br>
+                    Horas totales: {{ m.horas_totales }} <br>
+                    Créditos: {{ m.creditos }} <br>
+
+                    {% if m.archivo %}
+                        <a href="/uploads/{{ m.archivo }}" target="_blank">📄 Ver archivo</a>
+                        <a href="/uploads/{{ m.archivo }}" download class="btn-descargar">⬇ Descargar</a>
+                    {% else %}
+                        Sin archivo
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="no-result">No se encontraron materias.</p>
+    {% endif %}
+</div>
+
+<a href="{{ url_for('menu') }}" class="btn-regresar">⬅ Volver al Menú</a>
+
+<!-- SCRIPT DE VOZ PARA TODAS LAS SECCIONES -->
+<script>
+function habilitarVoz(btnId, urlDestino) {
+    const boton = document.getElementById(btnId);
+
+    boton.addEventListener("click", () => {
+        if (!("webkitSpeechRecognition" in window)) {
+            alert("Tu navegador no soporta reconocimiento de voz.");
+            return;
+        }
+
+        const rec = new webkitSpeechRecognition();
+        rec.lang = "es-MX";
+        rec.continuous = false;
+        rec.interimResults = false;
+
+        boton.innerText = "🎙 Escuchando...";
+        rec.onstart = () => console.log("✅ Micrófono ACTIVADO");
+        rec.start();
+
+        rec.onresult = (event) => {
+            const texto = event.results[0][0].transcript;
+            boton.innerText = "🎤 Voz";
+
+            fetch(urlDestino, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({texto})
+            })
+            .then(r => r.json())
+            .then(data => {
+                window.location.href = data.redirect;
+            });
+        };
+
+        rec.onerror = (err) => {
+            boton.innerText = "🎤 Voz";
+            alert("Error al reconocer la voz: " + err.error);
+        };
+
+        rec.onend = () => boton.innerText = "🎤 Voz";
+    });
+}
+
+// Activar voz para cada sección
+habilitarVoz("btnVozRecursos", "/voz_busqueda");
+habilitarVoz("btnVozAlumnos", "/voz_busqueda_alumno");
+habilitarVoz("btnVozProfesores", "/voz_busqueda_profesor");
+habilitarVoz("btnVozOrientadores", "/voz_busqueda_orientador");
+habilitarVoz("btnVozDirectivos", "/voz_busqueda_directivo");
+habilitarVoz("btnVozMaterias", "/voz_busqueda_materia");
+</script>
+
+</body>
+</html>

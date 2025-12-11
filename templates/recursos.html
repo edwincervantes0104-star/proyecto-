@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestión de Recursos - CECYTEM</title>
+    
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f8ef;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2e7d32;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #2e7d32;
+        }
+
+        .form-container img {
+            display: block;
+            margin: 0 auto 15px;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-top: 10px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #c8e6c9;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #256928;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            color: #2e7d32;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1b5e20;
+            margin-top: 30px;
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #2e7d32;
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        tr:hover {
+            background-color: #f1f8e9;
+        }
+
+        a {
+            color: #2e7d32;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>CECYTEM</h1>
+        <h2>Gestión de Recursos</h2>
+    </header>
+    <div class="form-container">
+        <img src="{{ url_for('static', filename='img/recursos.png') }}" alt="Logo CECYTEM" class="form-logo">
+        <form action="/recursos" method="POST" enctype="multipart/form-data">
+            <label>Nombre del recurso:</label>
+            <input type="text" name="nombre" required>
+
+            <label>Tipo de documento:</label>
+            <select name="tipo_documento" required>
+                <option value="">Seleccione...</option>
+                <option value="PDF">PDF</option>
+                <option value="Word">Word</option>
+                <option value="Excel">Excel</option>
+                <option value="Imagen">Imagen</option>
+                <option value="Otro">Otro</option>
+            </select>
+
+            <label>Docente:</label>
+            <input type="text" name="docente" required>
+
+            <label for="materia">Materia:</label>
+            <input type="text" id="materia" name="materia" required>
+
+            <label>Archivo:</label>
+            <input type="file" name="archivo" required>
+
+            <button type="submit">Subir recurso</button>
+            <a href="{{ url_for('chat_privado') }}">Chat General</a>
+            <ul>
+            {% for usuario in usuarios %}
+            <li><a href="{{ url_for('chat_privado', receptor_id=usuario.id) }}">{{ usuario.nombre }}</a></li>
+            {% endfor %}
+        </ul>
+
+        </form>
+        <a href="{{ url_for('menu') }}" class="back-btn">⬅ Volver al menú</a>
+    </div>
+
+    <h2>Listado de Recursos</h2>
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Docente</th>
+            <th>Materia</th>
+            <th>Archivo</th>
+            <th>Fecha subida</th>
+            <th>Acciones</th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td>{{ item.id }}</td>
+            <td>{{ item.nombre }}</td>
+            <td>{{ item.tipo_documento }}</td>
+            <td>{{ item.docente }}</td>
+            <td>{{ item.materia }}</td>
+            <td><a href="{{ url_for('uploaded_file', filename=item.archivo) }}" target="_blank">Ver archivo</a></td>
+            <td>{{ item.fecha_subida }}</td>
+            <td><a href="/recursos/eliminar/{{ item.id }}" onclick="return confirm('¿Eliminar este recurso?')">Eliminar</a></td>
+        
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

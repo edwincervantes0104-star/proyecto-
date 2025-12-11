@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Alumno</title>
+    <style>
+        body { font-family: Arial; margin: 30px; }
+        input, select { margin: 5px; padding: 5px; }
+    </style>
+</head>
+<body>
+
+    <h2>Editar Alumno</h2>
+
+    <form method="POST">
+        <input type="text" name="ncontrol" value="{{ alumno[1] }}" required>
+        <input type="text" name="curp" value="{{ alumno[2] }}" required>
+        <input type="text" name="nombre" value="{{ alumno[3] }}" required>
+        <input type="text" name="apaterno" value="{{ alumno[4] }}" required>
+        <input type="text" name="amaterno" value="{{ alumno[5] }}" required>
+        <select name="turno" required>
+            <option {{ 'selected' if alumno[6]=='Matutino' }}>Matutino</option>
+            <option {{ 'selected' if alumno[6]=='Vespertino' }}>Vespertino</option>
+        </select>
+        <input type="text" name="grupo" value="{{ alumno[7] }}" required>
+        <input type="text" name="semestre" value="{{ alumno[8] }}" required>
+        <button type="submit">Guardar Cambios</button>
+        <a href="/">Cancelar</a>
+    </form>
+
+</body>
+</html>

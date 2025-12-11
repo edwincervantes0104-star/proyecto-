@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Recuperar Cuenta - CECYTEM</title>
+
+  <!-- Vincular con el CSS institucional -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+</head>
+<body>
+
+  <!-- Encabezado institucional -->
+  <header class="form-header">
+    <img src="{{ url_for('static', filename='img/logo_cecytem.png') }}" alt="Logo CECYTEM" class="form-logo">
+    <p>Recuperar Cuenta</p>
+  </header>
+
+  <!-- Contenedor del formulario -->
+  <section class="form-container">
+    <div class="form-card">
+      <img src="{{ url_for('static', filename='img/login.png') }}" alt="login" class="login">
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('recuperar_correo') }}">
+        <label for="correo">Ingresa tu correo electrónico:</label>
+        <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required>
+        <button type="submit">Enviar código de recuperación</button>
+      </form>
+
+      <a href="{{ url_for('login') }}" class="btn-regresar">← Regresar al inicio de sesión</a>
+    </div>
+  </section>
+
+</body>
+</html>

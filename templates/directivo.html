@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Directivos - CECYTEM</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+</head>
+<body>
+  <header class="form-header">
+    <div style="display:flex;align-items:center;gap:16px;justify-content:center;flex-direction:column;">
+      <img src="{{ url_for('static', filename='img/logo_cecytem.png') }}" alt="Logo CECYTEM" class="form-logo">
+      <h1>Registro de Directivos</h1>
+    </div>
+  </header>
+
+  <main class="form-container">
+    <div class="form-card">
+      <img src="{{ url_for('static', filename='img/directivo.png') }}" alt="Directivo" class="form-image">
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-message">{{ messages[0] }}</div>
+        {% endif %}
+      {% endwith %}
+
+      {% if edit_obj %}
+        <form action="{{ url_for('editar_directivo', numero_empleado=edit_obj.numero_empleado) }}" method="post" autocomplete="off">
+      {% else %}
+        <form action="{{ url_for('directivo') }}" method="post" autocomplete="off">
+      {% endif %}
+
+        <label for="numero_empleado">Número de Empleado</label>
+        <input type="number" id="numero_empleado" name="numero_empleado" required 
+               value="{{ edit_obj.numero_empleado if edit_obj else '' }}"
+               {% if edit_obj %}readonly{% endif %}>
+
+        <label for="nombre">Nombre Completo</label>
+        <input type="text" id="nombre" name="nombre" required 
+               value="{{ edit_obj.nombre if edit_obj else '' }}">
+
+        <label for="puesto">Puesto</label>
+        <input type="text" id="puesto" name="puesto" required 
+               value="{{ edit_obj.puesto if edit_obj else '' }}">
+
+        <button type="submit" class="btn-guardar">
+          {{ 'Actualizar Directivo' if edit_obj else 'Registrar Directivo' }}
+        </button>
+      </form>
+
+      <a href="{{ url_for('menu') }}" class="btn-regresar">⬅ Volver al Menú</a>
+
+      <h2 style="margin-top:24px;color:#2E7D32;">Listado de Directivos</h2>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;margin-top:12px;">
+          <thead>
+            <tr>
+              <th>Número de Empleado</th>
+              <th>Nombre</th>
+              <th>Puesto</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if items %}
+              {% for it in items %}
+                <tr>
+                  <td>{{ it.numero_empleado }}</td>
+                  <td>{{ it.nombre }}</td>
+                  <td>{{ it.puesto }}</td>
+                  <td>
+                    <a href="{{ url_for('editar_directivo', numero_empleado=it.numero_empleado) }}">Editar</a> |
+                    <a href="{{ url_for('eliminar_directivo', numero_empleado=it.numero_empleado) }}"
+                       onclick="return confirm('¿Eliminar este directivo?');">Eliminar</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="4" style="text-align:center;color:#666;">
+                  No hay directivos registrados aún.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

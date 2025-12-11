@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificar Código</title>
+
+  <!-- Enlace al CSS institucional -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+</head>
+<body>
+
+  <!-- Encabezado con imagen -->
+  <header class="form-header">
+    <img src="{{ url_for('static', filename='img/logo_cecytem.png') }}" alt="Logo CECYTEM" class="form-logo">
+    <p>Verificación de Código</p>
+  </header>
+
+  <!-- Contenedor principal -->
+  <section class="form-container">
+    <div class="form-card">
+      <!-- Imagen del formulario -->
+      <img src="{{ url_for('static', filename='img/login.png') }}" alt="Login" class="login">
+
+      <!-- Mensajes Flash -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- Formulario -->
+      <form method="POST" action="{{ url_for('verificar_codigo') }}">
+        <label for="codigo">Ingresa el código enviado a tu correo:</label>
+        <input type="text" id="codigo" name="codigo" placeholder="Ejemplo: 123456" required>
+
+        <button type="submit" class="btn-guardar">Verificar código</button>
+      </form>
+
+      <a href="{{ url_for('recuperar_correo') }}" class="btn-regresar">← Volver a recuperación</a>
+    </div>
+  </section>
+
+</body>
+</html>

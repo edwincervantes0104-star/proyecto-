@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Crear Cuenta - CECYTEM</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+
+  <style>
+    /* ==== Estilo moderno para el select ==== */
+    select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,<svg width='12' height='8' viewBox='0 0 12 8' xmlns='http://www.w3.org/2000/svg'><path d='M1 1l5 5 5-5' stroke='%23666' stroke-width='2' fill='none' stroke-linecap='round'/></svg>");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 12px;
+      margin-bottom: 15px;
+    }
+
+    select:hover {
+      background-color: #eef3ff;
+    }
+
+    select:focus {
+      border-color: #1565c0;
+      box-shadow: 0 0 5px rgba(21,101,192,0.4);
+      outline: none;
+      background-color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <header class="form-header">
+    <img src="{{ url_for('static', filename='img/logo_cecytem.png') }}" alt="Logo CECYTEM" class="form-logo">
+    <h1>Crear Cuenta</h1>
+    <p style="margin:6px 0 0; color: #E8F5E9;">Regístrate para acceder a la plataforma</p>
+  </header>
+
+  <main class="form-container">
+    <div class="form-card">
+      <img src="{{ url_for('static', filename='img/crear_cuenta.png') }}" alt="Crear cuenta" class="form-image">
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-message">{{ messages[0] }}</div>
+        {% endif %}
+      {% endwith %}
+
+      <form action="{{ url_for('crear_cuenta') }}" method="post" autocomplete="off" novalidate>
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required autofocus>
+
+        <label for="apellidos">Apellidos</label>
+        <input type="text" id="apellidos" name="apellidos" placeholder="Tus apellidos" required>
+
+        <label for="correo">Correo electrónico</label>
+        <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com" required>
+
+        <label for="usuario">Usuario</label>
+        <input type="text" id="usuario" name="usuario" placeholder="Nombre de usuario" required>
+
+        <!-- NUEVO: Selección de tipo de ingreso -->
+        <label for="ingresar">Ingresar</label>
+        <select id="ingresar" name="ingresar" required>
+          <option value="">Elige cómo vas a entrar</option>
+          <option value="alumno">Alumno</option>
+          <option value="orientador">Orientador</option>
+          <option value="profesor">Profesor</option>
+          <option value="directivo">Directivo</option>
+        </select>
+
+        <!-- Campo que aparece dinámicamente según el rol -->
+        <div id="campoIngreso" style="margin-bottom:15px;"></div>
+
+        <label for="contrasena">Contraseña</label>
+        <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña segura" required minlength="6">
+
+        <button type="submit" class="btn-guardar">Crear Cuenta</button>
+      </form>
+
+      <a href="{{ url_for('login') }}" class="btn-regresar">⬅ Ir a Iniciar Sesión</a>
+    </div>
+  </main>
+
+  <script>
+    // Mostrar campo según el tipo de ingreso seleccionado
+    document.getElementById('ingresar').addEventListener('change', function() {
+      const campoDiv = document.getElementById('campoIngreso');
+      campoDiv.innerHTML = '';
+      let label = '';
+      let name = '';
+
+      switch (this.value) {
+        case 'alumno':
+          label = 'Ingresa tu No. Control:';
+          name = 'no_control';
+          break;
+        case 'orientador':
+          label = 'Ingresa tu No. Orientador:';
+          name = 'no_orientador';
+          break;
+        case 'profesor':
+          label = 'Ingresa tu No. Profesor:';
+          name = 'no_profesor';
+          break;
+        case 'directivo':
+          label = 'Ingresa tu No. Directivo:';
+          name = 'no_directivo';
+          break;
+        default:
+          return;
+      }
+
+      campoDiv.innerHTML = `
+        <label>${label}</label>
+        <input type="text" name="${name}" placeholder="Número de identificación" required>
+      `;
+    });
+  </script>
+</body>
+</html>

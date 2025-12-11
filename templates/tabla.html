@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listado de Profesores</title>
+</head>
+<body>
+
+  <h2 style="margin-top:24px;color:#2E7D32;">Listado de Profesores</h2>
+  <div style="overflow-x:auto;">
+    <table style="width:100%;margin-top:12px;">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Correo</th>
+          <th>Especialidad</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if items %}
+          {% for it in items %}
+            <tr>
+              <td>{{ it.id }}</td>
+              <td>{{ it.nombre }}</td>
+              <td>{{ it.apellido }}</td>
+              <td>{{ it.correo }}</td>
+              <td>{{ it.especialidad }}</td>
+              <td>
+                <a href="{{ url_for('editar_profesor', id=it.id) }}">Editar</a>
+                |
+                <a href="{{ url_for('eliminar_profesor', id=it.id) }}" onclick="return confirm('¿Eliminar este profesor?');">Eliminar</a>
+              </td>
+            </tr>
+          {% endfor %}
+        {% else %}
+          <tr><td colspan="7" style="text-align:center;color:#666;">No hay profesores registrados aún.</td></tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

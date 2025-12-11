@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Directivo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+</head>
+<body>
+
+  <div class="form-container">
+    <div class="form-card">
+
+      <h3>Editar Directivo</h3>
+
+      <form action="{{ url_for('editar_directivo', id=edit_obj.id) }}" method="post" autocomplete="off">
+
+        <label for="id">ID</label>
+        <input type="text" id="id" name="id" value="{{ edit_obj.id }}" readonly>
+
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" value="{{ edit_obj.nombre }}" required>
+
+        <label for="apellidos">Apellidos</label>
+        <input type="text" id="apellidos" name="apellidos" value="{{ edit_obj.apellidos }}" required>
+
+        <label for="departamento">Departamento</label>
+        <input type="text" id="departamento" name="departamento" value="{{ edit_obj.departamento }}" required>
+
+        <label for="cargo">Cargo</label>
+        <input type="text" id="cargo" name="cargo" value="{{ edit_obj.cargo }}" required>
+
+        <label for="gmail">Gmail</label>
+        <input type="email" id="gmail" name="gmail" value="{{ edit_obj.gmail }}" required>
+
+        <label for="contrasena">Contraseña</label>
+        <input type="password" id="contrasena" name="contrasena" placeholder="Dejar en blanco si no desea cambiar">
+
+        <div>
+          <button type="submit">Guardar Cambios</button>
+          <a href="{{ url_for('directivo') }}">Cancelar</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+</body>
+</html>

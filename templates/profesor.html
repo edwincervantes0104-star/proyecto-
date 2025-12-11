@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Profesores - CECYTEM</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+</head>
+<body>
+  
+  <header class="form-header">
+    <div style="display:flex;align-items:center;gap:16px;justify-content:center;flex-direction:column;">
+      <img src="{{ url_for('static', filename='img/logo_cecytem.png') }}" alt="Logo CECYTEM" class="form-logo">
+      <h1>Registro de Profesores</h1>
+    </div>
+  </header>
+
+  <main class="form-container">
+    <div class="form-card">
+
+      <img src="{{ url_for('static', filename='img/profesor.png') }}" alt="Profesor" class="form-image">
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-message">{{ messages[0] }}</div>
+        {% endif %}
+      {% endwith %}
+
+      {% if edit_obj %}
+        <form action="{{ url_for('editar_profesor', numero_empleado=edit_obj.numero_empleado) }}" method="post" autocomplete="off">
+      {% else %}
+        <form action="{{ url_for('profesor') }}" method="post" autocomplete="off">
+      {% endif %}
+
+        <label for="numero_empleado">Número de empleado</label>
+        <input type="number" id="numero_empleado" name="numero_empleado" required value="{{ edit_obj.numero_empleado if edit_obj else '' }}">
+
+        <label for="nombre_docente">Nombre del docente</label>
+        <input type="text" id="nombre_docente" name="nombre_docente" required value="{{ edit_obj.nombre_docente if edit_obj else '' }}">
+
+        <label for="fecha_ingreso">Fecha de ingreso</label>
+        <input type="date" id="fecha_ingreso" name="fecha_ingreso" required value="{{ edit_obj.fecha_ingreso if edit_obj else '' }}">
+
+        <label for="perfil_profesional">Perfil profesional</label>
+        <input type="text" id="perfil_profesional" name="perfil_profesional" required value="{{ edit_obj.perfil_profesional if edit_obj else '' }}">
+
+        <label for="asignatura">Asignatura</label>
+        <input type="text" id="asignatura" name="asignatura" required value="{{ edit_obj.asignatura if edit_obj else '' }}">
+
+        <button type="submit" class="btn-guardar">
+          {{ 'Actualizar Profesor' if edit_obj else 'Registrar Profesor' }}
+        </button>
+      </form>
+
+      <a href="{{ url_for('menu') }}" class="btn-regresar">⬅ Volver al Menú</a>
+
+      <h2 style="margin-top:24px;color:#2E7D32;">Listado de Profesores</h2>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;margin-top:12px;">
+          <thead>
+            <tr>
+              <th>Número de empleado</th>
+              <th>Nombre del docente</th>
+              <th>Fecha ingreso</th>
+              <th>Perfil profesional</th>
+              <th>Asignatura</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if items %}
+              {% for it in items %}
+                <tr>
+                  <td>{{ it.numero_empleado }}</td>
+                  <td>{{ it.nombre_docente }}</td>
+                  <td>{{ it.fecha_ingreso }}</td>
+                  <td>{{ it.perfil_profesional }}</td>
+                  <td>{{ it.asignatura }}</td>
+                  <td>
+                    <a href="{{ url_for('editar_profesor', numero_empleado=it.numero_empleado) }}">Editar</a>
+                    |
+                    <a href="{{ url_for('eliminar_profesor', numero_empleado=it.numero_empleado) }}" onclick="return confirm('¿Eliminar este profesor?');">Eliminar</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr><td colspan="6" style="text-align:center;color:#666;">No hay profesores registrados aún.</td></tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+</body>
+</html>

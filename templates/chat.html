@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>💬 Chat General</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ece5dd;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .chat-container {
+      width: 380px;
+      height: 600px;
+      background: #fff;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 10px #aaa;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* ===== BOTÓN REGRESAR ===== */
+    .btn-regresar {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      background: #c62828;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      padding: 6px 14px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .btn-regresar:hover {
+      background: #b71c1c;
+      transform: scale(1.05);
+    }
+
+    .chat-header {
+      background: #075e54;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-weight: bold;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+    }
+
+    .chat-box {
+      flex: 1;
+      padding: 10px;
+      overflow-y: auto;
+      background: #e5ddd5;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .mensaje {
+      background: #dcf8c6;
+      margin: 6px 0;
+      padding: 8px 10px;
+      border-radius: 10px;
+      max-width: 80%;
+      align-self: flex-end;
+      position: relative;
+      word-wrap: break-word;
+    }
+
+    .mensaje strong {
+      display: block;
+      color: #075e54;
+      margin-bottom: 4px;
+    }
+
+    .hora {
+      font-size: 5px;
+      color: #555;
+      position: absolute;
+      bottom: 3px;
+      right: 10px;
+      opacity: 0.7;
+    }
+
+    .mensaje img, 
+    .mensaje video, 
+    .mensaje audio {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-top: 6px;
+    }
+
+    .input-area {
+      display: flex;
+      flex-direction: column;
+      padding: 10px;
+      background: #f0f0f0;
+      border-top: 1px solid #ddd;
+    }
+
+    .input-area input[type="text"],
+    .input-area input[type="file"] {
+      border: none;
+      border-radius: 20px;
+      padding: 8px 12px;
+      margin-bottom: 8px;
+      background: #fff;
+      outline: none;
+    }
+
+    .input-area button {
+      background: #075e54;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .input-area button:hover {
+      background: #0b7a65;
+    }
+
+    /* Mensaje de sistema cuando no hay mensajes */
+    .no-msg {
+      text-align: center;
+      color: #777;
+      font-style: italic;
+      margin-top: 20px;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="chat-container">
+
+    <!-- Botón regresar -->
+    <button class="btn-regresar" onclick="window.location.href='/menu'">⬅ Regresar</button>
+
+    <div class="chat-header">
+      💬 Chat General
+    </div>
+
+    <div class="chat-box">
+      {% if mensajes %}
+        {% for m in mensajes %}
+          <div class="mensaje">
+            <strong>{{ m.usuario }}</strong>
+            {% if m.tipo == 'imagen' %}
+              📷<br><img src="{{ m.archivo_url }}" alt="Imagen" loading="lazy">
+            {% elif m.tipo == 'video' %}
+              🎬<br><video src="{{ m.archivo_url }}" controls></video>
+            {% elif m.tipo == 'audio' %}
+              🎵<br><audio controls><source src="{{ m.archivo_url }}"></audio>
+            {% elif m.tipo == 'archivo' %}
+              📎 <a href="{{ m.archivo_url }}" target="_blank">{{ m.nombre_archivo }}</a>
+            {% else %}
+              {{ m.mensaje }}
+            {% endif %}
+            <span class="hora">{{ m.fecha_str }}</span>
+          </div>
+        {% endfor %}
+      {% else %}
+        <p class="no-msg">No hay mensajes aún.</p>
+      {% endif %}
+    </div>
+
+    <form class="input-area" method="POST" enctype="multipart/form-data">
+      <input type="text" name="contenido" placeholder="Escribe un mensaje">
+      <input type="file" name="archivo" accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.zip">
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+
+</body>
+</html>

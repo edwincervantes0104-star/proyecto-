@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Orientadores - CECYTEM</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+</head>
+<body>
+
+  <header class="form-header">
+    <div style="display:flex;align-items:center;gap:16px;justify-content:center;flex-direction:column;">
+      <img src="{{ url_for('static', filename='img/logo_cecytem.png') }}" alt="Logo CECYTEM" class="form-logo">
+      <h1>Registro de Orientadores</h1>
+    </div>
+  </header>
+
+  <main class="form-container">
+    <div class="form-card">
+
+      <img src="{{ url_for('static', filename='img/orientador.png') }}" alt="Orientador" class="form-image">
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-message">{{ messages[0] }}</div>
+        {% endif %}
+      {% endwith %}
+
+      {% if edit_obj %}
+        <form action="{{ url_for('editar_orientador', numero_empleado=edit_obj.numero_empleado) }}" method="post" autocomplete="off">
+      {% else %}
+        <form action="{{ url_for('orientador') }}" method="post" autocomplete="off">
+      {% endif %}
+
+        <!-- Número de empleado -->
+        <label for="numero_empleado">Número de empleado</label>
+        <input type="number" id="numero_empleado" name="numero_empleado" required
+               value="{{ edit_obj.numero_empleado if edit_obj else '' }}"
+               {% if edit_obj %}readonly{% endif %}>
+
+        <!-- Nombre -->
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" required
+               value="{{ edit_obj.nombre if edit_obj else '' }}">
+
+        <!-- Grupos que atiende -->
+        <label for="grupos_atendidos">Grupos que atiende</label>
+        <input type="text" id="grupos_atendidos" name="grupos_atendidos" required
+               value="{{ edit_obj.grupos_atendidos if edit_obj else '' }}">
+
+        <button type="submit" class="btn-guardar">
+          {{ 'Actualizar Orientador' if edit_obj else 'Registrar Orientador' }}
+        </button>
+      </form>
+
+      <a href="{{ url_for('menu') }}" class="btn-regresar">⬅ Volver al Menú</a>
+
+      <!-- Tabla -->
+      <h2 style="margin-top:24px;color:#2E7D32;">Listado de Orientadores</h2>
+      <div style="overflow-x:auto;">
+        <table style="width:100%;margin-top:12px;">
+          <thead>
+            <tr>
+              <th>Número empleado</th>
+              <th>Nombre</th>
+              <th>Grupos atendidos</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if items %}
+              {% for it in items %}
+                <tr>
+                  <td>{{ it.numero_empleado }}</td>
+                  <td>{{ it.nombre }}</td>
+                  <td>{{ it.grupos_atendidos }}</td>
+                  <td>
+                    <a href="{{ url_for('editar_orientador', numero_empleado=it.numero_empleado) }}">Editar</a> |
+                    <a href="{{ url_for('eliminar_orientador', numero_empleado=it.numero_empleado) }}"
+                       onclick="return confirm('¿Eliminar este orientador?');">Eliminar</a>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+              <tr>
+                <td colspan="4" style="text-align:center;color:#666;">
+                  No hay orientadores registrados aún.
+                </td>
+              </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+</body>
+</html>
+

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard CECYTEM 🌿</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .navbar {
+            background-color: #2e7d32;
+        }
+        .navbar-brand, .navbar-text, .btn-light {
+            color: #fff !important;
+        }
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #1b5e20;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand fw-bold" href="#">🌿 CECYTEM Dashboard</a>
+            <div class="d-flex">
+                <span class="navbar-text me-3">Bienvenido, {{ usuario }}</span>
+                <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">Cerrar sesión</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <div class="container py-5">
+        <h2 class="text-center text-success fw-bold mb-4">Resumen General del Sistema</h2>
+
+        <!-- TARJETAS -->
+        <div class="row g-4 mb-5">
+            {% for nombre, valor in data.items() %}
+            <div class="col-md-4 col-lg-4">
+                <div class="card p-4 text-center" style="background-color: #a5d6a7;">
+                    <div class="card-body">
+                        <h5 class="card-title text-uppercase">{{ nombre }}</h5>
+                        <p class="fs-2 fw-bold text-dark mb-0">{{ valor }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- GRÁFICO DE BARRAS -->
+        <div class="card p-4 shadow-sm mb-5">
+            <h5 class="card-title text-success mb-3 text-center">📊 Distribución de Registros</h5>
+            <canvas id="chartResumen" height="100"></canvas>
+        </div>
+
+        <!-- GRÁFICO DE PASTEL -->
+        <div class="card p-4 shadow-sm">
+            <h5 class="card-title text-success mb-3 text-center">🥧 Porcentaje por Categoría</h5>
+            <canvas id="chartPie" height="100"></canvas>
+        </div>
+
+        <footer>
+            <p>© {{ datetime.utcnow().year }} CECYTEM | Panel Administrativo Verde 🌱</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ✅ Convertir el diccionario Python en objeto JS seguro
+        const dataDashboard = JSON.parse('{{ data | tojson | safe }}');
+
+        const coloresVerdes = [
+            '#81c784', '#66bb6a', '#43a047', '#2e7d32', '#1b5e20', '#a5d6a7'
+        ];
+
+        // ===============================
+        // 📊 GRÁFICO DE BARRAS
+        // ===============================
+        const ctxBar = document.getElementById('chartResumen').getContext('2d');
+        let chartBar = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['Alumnos', 'Profesores', 'Orientadores', 'Directivos', 'Materias', 'Recursos'],
+                datasets: [{
+                    label: 'Totales',
+                    data: [
+                        dataDashboard.alumnos,
+                        dataDashboard.profesores,
+                        dataDashboard.orientadores,
+                        dataDashboard.directivos,
+                        dataDashboard.materias,
+                        dataDashboard.recursos
+                    ],
+                    backgroundColor: coloresVerdes,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: { y: { beginAtZero: true } },
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Distribución de Registros',
+                        color: '#1b5e20',
+                        font: { size: 18 }
+                    }
+                }
+            }
+        });
+
+        // ===============================
+        // 🥧 GRÁFICO DE PASTEL
+        // ===============================
+        const ctxPie = document.getElementById('chartPie').getContext('2d');
+        let chartPie = new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: ['Alumnos', 'Profesores', 'Orientadores', 'Directivos', 'Materias', 'Recursos'],
+                datasets: [{
+                    data: [
+                        dataDashboard.alumnos,
+                        dataDashboard.profesores,
+                        dataDashboard.orientadores,
+                        dataDashboard.directivos,
+                        dataDashboard.materias,
+                        dataDashboard.recursos
+                    ],
+                    backgroundColor: coloresVerdes,
+                    hoverOffset: 15
+                }]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: false
+                    },
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#1b5e20',
+                            font: { size: 14 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // ===============================
+        // 🔄 ACTUALIZACIÓN AUTOMÁTICA
+        // ===============================
+        setInterval(async () => {
+            try {
+                const response = await fetch('/dashboard/data');
+                const updated = await response.json();
+
+                const nuevosDatos = [
+                    updated.alumnos,
+                    updated.profesores,
+                    updated.orientadores,
+                    updated.directivos,
+                    updated.materias,
+                    updated.recursos
+                ];
+
+                chartBar.data.datasets[0].data = nuevosDatos;
+                chartPie.data.datasets[0].data = nuevosDatos;
+
+                chartBar.update();
+                chartPie.update();
+            } catch (error) {
+                console.error('Error al actualizar los datos del gráfico:', error);
+            }
+        }, 10000);
+    </script>
+</body>
+</html>

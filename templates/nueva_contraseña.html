@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Restablecer Contraseña</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}" />
+</head>
+<body>
+  <div class="contenedor">
+    <!-- Franja superior -->
+    <div class="franja-verde">
+      Restablecer Contraseña
+    </div>
+
+    <!-- Imagen superior -->
+    <div class="imagen-superior">
+      <img src="{{ url_for('static', filename='img/login.png') }}" alt="login" />
+    </div>
+
+    <!-- Mensajes flash -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Formulario -->
+    <form method="POST" class="formulario">
+      <label for="nueva">Nueva contraseña:</label>
+      <input type="password" id="nueva" name="nueva" required />
+
+      <label for="confirmar">Confirmar contraseña:</label>
+      <input type="password" id="confirmar" name="confirmar" required />
+
+      <button type="submit">Actualizar Contraseña</button>
+    </form>
+
+    <!-- Enlace de regreso -->
+    <div class="volver">
+     <a href="{{ url_for('login') }}">← Volver al Login</a>
+
+    </div>
+  </div>
+</body>
+</html>

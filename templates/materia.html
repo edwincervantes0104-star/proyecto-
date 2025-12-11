@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gestión de Materias - CECYTEM</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+  
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f8ef;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2e7d32;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-top: 5px solid #2e7d32;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            color: #2e7d32;
+            margin-top: 10px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #c8e6c9;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            background-color: #2e7d32;
+            color: white;
+            font-weight: bold;
+            border: none;
+            padding: 10px;
+            margin-top: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        table {
+            width: 95%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th {
+            background-color: #2e7d32;
+            color: white;
+            padding: 10px;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+  </style>
+</head>
+
+<body>
+
+<header class="menu-header">
+  <h1>Gestión de Materias</h1>
+</header>
+
+<div class="form-container">
+    <h2>{{ 'Editar Materia' if edit_obj else 'Registrar Materia' }}</h2>
+
+    <!-- FORMULARIO SIN ARCHIVO -->
+    <form method="POST"
+          action="{{ url_for('editar_materia', id=edit_obj.id) if edit_obj else url_for('materia') }}">
+
+        <label>Estructura Curricular:</label>
+        <input type="text" name="estructura_curricular"
+               value="{{ edit_obj.estructura_curricular if edit_obj else '' }}" required>
+
+        <label>Nombre de la Materia:</label>
+        <input type="text" name="nombre_materia"
+               value="{{ edit_obj.nombre_materia if edit_obj else '' }}" required>
+
+        <label>Horas a la semana:</label>
+        <input type="number" name="horas_semana"
+               value="{{ edit_obj.horas_semana if edit_obj else '' }}" required>
+
+        <label>Horas totales:</label>
+        <input type="number" name="horas_totales"
+               value="{{ edit_obj.horas_totales if edit_obj else '' }}" required>
+
+        <label>Créditos:</label>
+        <input type="number" name="creditos"
+               value="{{ edit_obj.creditos if edit_obj else '' }}" required>
+
+        <button type="submit">
+            {{ 'Actualizar' if edit_obj else 'Guardar Registro' }}
+        </button>
+    </form>
+
+    <a href="{{ url_for('menu') }}" class="volver">← Volver al menú</a>
+</div>
+
+<section class="lista">
+    <h2>Listado de Materias</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Estructura Curricular</th>
+                <th>Nombre</th>
+                <th>Horas Semana</th>
+                <th>Horas Totales</th>
+                <th>Créditos</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for m in items %}
+            <tr>
+                <td>{{ m.id }}</td>
+                <td>{{ m.estructura_curricular }}</td>
+                <td>{{ m.nombre_materia }}</td>
+                <td>{{ m.horas_semana }}</td>
+                <td>{{ m.horas_totales }}</td>
+                <td>{{ m.creditos }}</td>
+
+                <td>
+                    <a href="{{ url_for('editar_materia', id=m.id) }}">Editar</a> |
+                    <a href="{{ url_for('eliminar_materia', id=m.id) }}"
+                       onclick="return confirm('¿Deseas eliminar esta materia?')">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+</body>
+</html>

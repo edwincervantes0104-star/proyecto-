@@ -1,0 +1,123 @@
+/* ======== estilos.css ======== */
+
+/* Fuente y fondo general */
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: #f3faef;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Contenedor principal */
+.contenedor {
+  background-color: #ffffff;
+  width: 380px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  text-align: center;
+}
+
+/* Franja superior verde */
+.franja-verde {
+  background-color: #2e7d32;
+  color: white;
+  font-weight: bold;
+  font-size: 1.3em;
+  padding: 15px;
+}
+
+/* Imagen superior */
+.imagen-superior img {
+  width: 90px;
+  height: 90px;
+  margin-top: 15px;
+  border-radius: 50%;
+  border: 3px solid #2e7d32;
+}
+
+/* Formularios */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 20px;
+  text-align: left;
+}
+
+/* Etiquetas */
+.formulario label {
+  color: #1b5e20;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+/* Campos de texto */
+.formulario input {
+  padding: 10px;
+  border: 2px solid #a5d6a7;
+  border-radius: 6px;
+  font-size: 1em;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.formulario input:focus {
+  border-color: #2e7d32;
+}
+
+/* Botón */
+.formulario button {
+  background-color: #2e7d32;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 1em;
+  cursor: pointer;
+  margin-top: 8px;
+  transition: background-color 0.3s;
+}
+
+.formulario button:hover {
+  background-color: #1b5e20;
+}
+
+/* Mensajes de alerta */
+.alert {
+  margin: 15px 20px;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+.alert-success {
+  background-color: #c8e6c9;
+  color: #256029;
+}
+
+.alert-danger {
+  background-color: #ffcdd2;
+  color: #c62828;
+}
+/* Enlace de volver */
+.volver {
+  margin: 10px 0 20px 0;
+  text-align: center;
+}
+
+.volver a {
+  color: #2e7d32;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.volver a:hover {
+  color: #1b5e20;sñ
+}
