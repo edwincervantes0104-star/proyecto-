@@ -73,5 +73,9 @@ class TestProfesores(unittest.TestCase):
         self.assertIn(b"Profesor eliminado", response.data)
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     unittest.main()
     #cervantes2903
+=======
+    unittest.main()
+>>>>>>> 0d042515743adc98e49384cfdacf37dfe76c9eec
