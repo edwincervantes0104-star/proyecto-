@@ -90,6 +90,109 @@
     color: #1b5e20;
     font-weight: bold;
   }
+  /* =============================== */
+/* RESPONSIVO MENÚ PRINCIPAL */
+/* =============================== */
+
+/* ----- Ajuste general ----- */
+.menu-container {
+  padding: 20px;
+}
+
+/* ----- GRID ADAPTABLE ----- */
+.menu-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+/* =============================== */
+/* TABLET */
+/* =============================== */
+@media (max-width: 1024px) {
+  .menu-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .menu-item {
+    width: 200px;
+    height: 200px;
+  }
+
+  .menu-item img {
+    width: 90px;
+    height: 90px;
+  }
+}
+
+/* =============================== */
+/* CELULAR */
+/* =============================== */
+@media (max-width: 600px) {
+
+  /* Header */
+  .menu-header h1 {
+    font-size: 18px;
+    text-align: center;
+  }
+
+  .menu-header p {
+    font-size: 13px;
+    text-align: center;
+  }
+
+  .header-content {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .menu-logo {
+    width: 70px;
+  }
+
+  /* Grid en una columna */
+  .menu-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  /* Cuadros */
+  .menu-item {
+    width: 100%;
+    height: auto;
+    padding: 20px;
+    border-radius: 16px;
+  }
+
+  .menu-item img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .menu-item h2 {
+    font-size: 16px;
+  }
+
+  /* Botón flotante */
+  a[href="/buscar"] {
+    bottom: 15px;
+    right: 15px;
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  /* Footer */
+  .menu-footer {
+    font-size: 12px;
+    text-align: center;
+    padding: 10px;
+  }
+}
+@media (max-width: 600px) {
+  .bloqueado {
+    opacity: 0.6;
+  }
+}
+
 </style>
 
 </head>
