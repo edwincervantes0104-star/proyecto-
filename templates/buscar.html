@@ -140,6 +140,7 @@
                     {{ item.docente }} — {{ item.materia }}<br>
                     <a href="/uploads/{{ item.archivo }}">📄 Ver archivo</a>
                     <a href="/uploads/{{ item.archivo }}" download class="btn-descargar">⬇ Descargar</a>
+                    <a href="javascript:void(0)" onclick="imprimirDocumento('/uploads/{{ item.archivo }}')" class="btn-descargar">🖨 Imprimir</a>
                 </li>
             {% endfor %}
         </ul>
@@ -283,6 +284,7 @@
                     {% if m.archivo %}
                         <a href="/uploads/{{ m.archivo }}" target="_blank">📄 Ver archivo</a>
                         <a href="/uploads/{{ m.archivo }}" download class="btn-descargar">⬇ Descargar</a>
+                        <a href="javascript:void(0)" onclick="imprimirDocumento('/uploads/{{ m.archivo }}')" class="btn-descargar">🖨 Imprimir</a>
                     {% else %}
                         Sin archivo
                     {% endif %}
@@ -347,6 +349,21 @@ habilitarVoz("btnVozProfesores", "/voz_busqueda_profesor");
 habilitarVoz("btnVozOrientadores", "/voz_busqueda_orientador");
 habilitarVoz("btnVozDirectivos", "/voz_busqueda_directivo");
 habilitarVoz("btnVozMaterias", "/voz_busqueda_materia");
+</script>
+
+<!-- FUNCIÓN PARA IMPRIMIR -->
+<script>
+function imprimirDocumento(url) {
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+    iframe.src = url;
+    document.body.appendChild(iframe);
+
+    iframe.onload = function () {
+        iframe.contentWindow.focus();
+        iframe.contentWindow.print();
+    };
+}
 </script>
 
 </body>
