@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Profesores - CECYTEM</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/cecytem.css') }}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
   
@@ -68,25 +69,28 @@
             </tr>
           </thead>
           <tbody>
-            {% if items %}
-              {% for it in items %}
-                <tr>
-                  <td>{{ it.numero_empleado }}</td>
-                  <td>{{ it.nombre_docente }}</td>
-                  <td>{{ it.fecha_ingreso }}</td>
-                  <td>{{ it.perfil_profesional }}</td>
-                  <td>{{ it.asignatura }}</td>
-                  <td>
-                    <a href="{{ url_for('editar_profesor', numero_empleado=it.numero_empleado) }}">Editar</a>
-                    |
-                    <a href="{{ url_for('eliminar_profesor', numero_empleado=it.numero_empleado) }}" onclick="return confirm('¿Eliminar este profesor?');">Eliminar</a>
-                  </td>
-                </tr>
-              {% endfor %}
-            {% else %}
-              <tr><td colspan="6" style="text-align:center;color:#666;">No hay profesores registrados aún.</td></tr>
-            {% endif %}
-          </tbody>
+{% if items %}
+  {% for it in items %}
+  <tr>
+    <td data-label="Número">{{ it.numero_empleado }}</td>
+    <td data-label="Nombre">{{ it.nombre_docente }}</td>
+    <td data-label="Fecha">{{ it.fecha_ingreso }}</td>
+    <td data-label="Perfil">{{ it.perfil_profesional }}</td>
+    <td data-label="Asignatura">{{ it.asignatura }}</td>
+    <td data-label="Acciones">
+      <a href="{{ url_for('editar_profesor', numero_empleado=it.numero_empleado) }}">Editar</a> |
+      <a href="{{ url_for('eliminar_profesor', numero_empleado=it.numero_empleado) }}"
+         onclick="return confirm('¿Eliminar este profesor?');">Eliminar</a>
+    </td>
+  </tr>
+  {% endfor %}
+{% else %}
+  <tr>
+    <td colspan="6" style="text-align:center;">No hay profesores registrados.</td>
+  </tr>
+{% endif %}
+</tbody>
+
         </table>
       </div>
 

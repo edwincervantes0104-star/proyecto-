@@ -520,6 +520,7 @@ tr:nth-child(even) {
     font-weight: bold;
     text-align: left;
   }
+
 /* ===================== */
 /* TABLAS COMPACTAS */
 /* ===================== */
@@ -566,4 +567,3 @@ tbody tr:nth-child(even) {
     font-size: 12px;
   }
 }
-/*correcto :)
