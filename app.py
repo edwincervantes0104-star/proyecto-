@@ -441,6 +441,142 @@ def dashboard():
     }
 
     return render_template_string(dashboard.html, usuario=usuario, data=data, datetime=datetime)
+# ===============================
+# RUTA PRINCIPAL DE REPORTES
+# ===============================
+@app.route('/reportes', methods=['GET', 'POST'])
+def reportes():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    # ================== GUARDAR REPORTE ==================
+    if request.method == 'POST':
+        tipo = request.form['tipo']
+        persona_id = request.form['persona_id']
+        motivo = request.form['motivo']
+        hora = request.form['hora']
+        fecha = request.form['fecha']
+
+        cursor.execute(
+            """
+            INSERT INTO reportes
+                (tipo, persona_id, motivo, hora, fecha)
+            VALUES
+                (%s, %s, %s, %s, %s)
+            """,
+            (tipo, persona_id, motivo, hora, fecha)
+        )
+        mysql.connection.commit()
+
+    # ================== ALUMNOS ==================
+    cursor.execute(
+        """
+        SELECT
+            id,
+            nombre,
+            apellido_paterno,
+            apellido_materno
+        FROM alumnos
+        """
+    )
+    alumnos = cursor.fetchall()
+
+    # ================== PROFESORES ==================
+    cursor.execute(
+        """
+        SELECT
+            numero_empleado,
+            nombre_docente
+        FROM profesores
+        """
+    )
+    profesores = cursor.fetchall()
+
+    # ================== REPORTES ==================
+    cursor.execute(
+        """
+        SELECT
+            r.id,
+            r.tipo,
+            r.persona_id,
+            r.motivo,
+            r.hora,
+            r.fecha,
+            CASE
+                WHEN r.tipo = 'alumno' THEN
+                    CONCAT(
+                        a.nombre,
+                        ' ',
+                        a.apellido_paterno,
+                        ' ',
+                        a.apellido_materno
+                    )
+                WHEN r.tipo = 'profesor' THEN
+                    p.nombre_docente
+            END AS nombre_persona
+        FROM reportes r
+        LEFT JOIN alumnos a
+            ON r.persona_id = a.id
+            AND r.tipo = 'alumno'
+        LEFT JOIN profesores p
+            ON r.persona_id = p.numero_empleado
+            AND r.tipo = 'profesor'
+        ORDER BY r.fecha DESC, r.hora DESC
+        """
+    )
+
+    reportes = cursor.fetchall()
+
+    cursor.close()
+
+    return render_template(
+        'reportes.html',
+        alumnos=alumnos,
+        profesores=profesores,
+        reportes=reportes
+    )
+
+
+@app.route('/imprimir_reporte/<int:id>')
+def imprimir_reporte(id):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    cursor.execute("""
+        SELECT 
+            r.id,
+            r.tipo,
+            r.persona_id,
+            r.motivo,
+            r.hora,
+            r.fecha,
+            CASE
+                WHEN r.tipo = 'alumno' THEN CONCAT(a.nombre,' ',a.apellido_paterno,' ',a.apellido_materno)
+                WHEN r.tipo = 'profesor' THEN p.nombre_docente
+            END AS nombre_persona
+        FROM reportes r
+        LEFT JOIN alumnos a 
+            ON r.tipo = 'alumno' AND r.persona_id = a.id
+        LEFT JOIN profesores p 
+            ON r.tipo = 'profesor' AND r.persona_id = p.numero_empleado
+        WHERE r.id = %s
+    """, (id,))
+
+    reporte = cursor.fetchone()
+
+    return render_template('imprimir_reporte.html', reporte=reporte)
+
+
+@app.route('/reportes/eliminar/<int:id>')
+def eliminar_reporte(id):
+    cursor = mysql.connection.cursor()
+
+    cursor.execute(
+        "DELETE FROM reportes WHERE id = %s",
+        (id,)
+    )
+    mysql.connection.commit()
+
+    return redirect('/reportes')
+
 
 
 # -----------------------------------------------------

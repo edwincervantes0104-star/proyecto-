@@ -254,11 +254,11 @@
         <h2>Chat</h2>
       </a>
 
-      <!-- CREAR CUENTA -->
-      <a href="/crear_cuenta" class="menu-item {% if rol not in ['directivo'] %}bloqueado{% endif %}">
-        <img src="{{ url_for('static', filename='img/crear_cuenta.png') }}" alt="Crear Cuenta">
-        <h2>Crear Cuenta</h2>
-      </a>
+      <!-- REPORTES -->
+<a href="/reportes" class="menu-item {% if rol not in ['directivo', 'profesor'] %}bloqueado{% endif %}">
+  <img src="{{ url_for('static', filename='img/reportes.png') }}" alt="Reportes">
+  <h2>Reportes</h2>
+</a>
 
 <a href="/buscar" 
    style="position:fixed; bottom:20px; right:20px;

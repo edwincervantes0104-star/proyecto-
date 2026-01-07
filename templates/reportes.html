@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Reportes</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f2f4f7;
+    margin: 0;
+    padding: 0;
+}
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+.card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+select, textarea, input, button {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    box-sizing: border-box;
+}
+button {
+    background: #4a6cf7;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table, th, td {
+    border: 1px solid #ccc;
+}
+th, td {
+    padding: 10px;
+    text-align: center;
+}
+th {
+    background: #f0f0f0;
+}
+.actions form {
+    display: inline-block;
+}
+.actions button {
+    width: auto;
+    padding: 5px 10px;
+}
+
+/* ================= IMPRESIÓN ================= */
+@media print {
+
+    body {
+        background: white;
+    }
+
+    .container {
+        width: 100%;
+        margin: 0;
+    }
+
+    .card {
+        border: none;
+        box-shadow: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    form, button {
+        display: none;
+    }
+
+    table {
+        font-size: 14px;
+    }
+
+    th {
+        background: #e6ecff !important;
+        color: black;
+    }
+
+    th, td {
+        border: 1px solid black;
+    }
+
+    body::before {
+        content: "COLEGIO DE ESTUDIOS CIENTÍFICOS Y TECNOLÓGICOS DEL ESTADO\nREPORTE DISCIPLINARIO";
+        white-space: pre;
+        display: block;
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 25px;
+        border-bottom: 3px solid #2b4eff;
+        padding-bottom: 10px;
+    }
+
+    .firmas {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 60px;
+    }
+
+    .firma {
+        width: 30%;
+        text-align: center;
+    }
+
+    .linea {
+        border-top: 1px solid black;
+        margin-top: 60px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- ================= FORMULARIO ================= -->
+<div class="card">
+<h2>📋 Registrar Reporte</h2>
+
+<form method="POST" action="/reportes">
+
+    <label>Tipo de reporte</label>
+    <select id="tipo" name="tipo" onchange="cargarPersonas()" required>
+        <option value="">Seleccione</option>
+        <option value="alumno">Alumno</option>
+        <option value="profesor">Profesor</option>
+    </select>
+
+    <label>Persona</label>
+    <select id="persona" onchange="asignarID()" required>
+        <option value="">Seleccione</option>
+    </select>
+
+    <input type="hidden" name="persona_id" id="persona_id">
+
+    <label>Motivo</label>
+    <textarea name="motivo" required></textarea>
+
+    <label>Hora</label>
+    <input type="time" name="hora" required>
+
+    <label>Fecha</label>
+    <input type="date" name="fecha" required>
+
+    <button type="submit">Guardar Reporte</button>
+</form>
+</div>
+
+<!-- ================= TABLA ================= -->
+<div class="card">
+<h2>📄 Reportes Registrados</h2>
+
+<table>
+<tr>
+    <th>ID</th>
+    <th>Tipo</th>
+    <th>Nombre</th>
+    <th>Persona ID</th>
+    <th>Motivo</th>
+    <th>Hora</th>
+    <th>Fecha</th>
+    <th>Acciones</th>
+</tr>
+
+{% for r in reportes %}
+<tr>
+    <td>{{ r.id }}</td>
+    <td>{{ r.tipo }}</td>
+    <td>{{ r.nombre_persona }}</td>
+    <td>{{ r.persona_id }}</td>
+    <td>{{ r.motivo }}</td>
+    <td>{{ r.hora }}</td>
+    <td>{{ r.fecha }}</td>
+    <td class="actions">
+
+        <form method="GET" action="/imprimir_reporte/{{ r.id }}" target="_blank">
+            <button type="submit">Imprimir</button>
+        </form>
+
+        <form method="GET" action="/reportes/eliminar/{{ r.id }}">
+            <button type="submit">Eliminar</button>
+        </form>
+
+    </td>
+</tr>
+{% endfor %}
+</table>
+
+<!-- ================= FIRMAS ================= -->
+<div class="firmas">
+    <div class="firma">
+        <div class="linea"></div>
+        <p>Director(a)</p>
+    </div>
+    <div class="firma">
+        <div class="linea"></div>
+        <p>Orientador(a)</p>
+    </div>
+    <div class="firma">
+        <div class="linea"></div>
+        <p>Quien reporta</p>
+    </div>
+</div>
+
+</div>
+</div>
+
+<!-- ================= DATOS JSON ================= -->
+<script id="data-alumnos" type="application/json">
+    {{ alumnos | tojson }}
+</script>
+
+<script id="data-profesores" type="application/json">
+    {{ profesores | tojson }}
+</script>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+const alumnos = JSON.parse(
+    document.getElementById("data-alumnos").textContent
+);
+
+const profesores = JSON.parse(
+    document.getElementById("data-profesores").textContent
+);
+
+function cargarPersonas() {
+    const tipo = document.getElementById("tipo").value;
+    const persona = document.getElementById("persona");
+
+    persona.innerHTML = '<option value="">Seleccione</option>';
+
+    if (!tipo) return;
+
+    if (tipo === "alumno") {
+        alumnos.forEach(a => {
+            const option = document.createElement("option");
+            option.value = a.id;
+            option.textContent = a.nombre;
+            persona.appendChild(option);
+        });
+    }
+
+    if (tipo === "profesor") {
+        profesores.forEach(p => {
+            const option = document.createElement("option");
+            option.value = p.numero_empleado;
+            option.textContent = p.nombre_docente;
+            persona.appendChild(option);
+        });
+    }
+}
+
+function asignarID() {
+    document.getElementById("persona_id").value =
+        document.getElementById("persona").value;
+}
+</script>
+
+
+</body>
+</html>

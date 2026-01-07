@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Impresión de Reporte</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+}
+
+.encabezado {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.encabezado h2 {
+    margin: 0;
+}
+
+.encabezado hr {
+    border: 2px solid #2b4eff;
+    margin-top: 10px;
+}
+
+.tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.tabla th, .tabla td {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: left;
+}
+
+.tabla th {
+    background: #e6ecff;
+}
+
+.firmas {
+    margin-top: 80px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.firma {
+    width: 30%;
+    text-align: center;
+}
+
+.linea {
+    border-top: 1px solid black;
+    margin-top: 60px;
+}
+</style>
+</head>
+
+<body onload="window.print()">
+
+<div class="encabezado">
+    <h2>COLEGIO DE ESTUDIOS CIENTÍFICOS Y TECNOLÓGICOS DEL ESTADO</h2>
+    <h3>REPORTE DISCIPLINARIO</h3>
+    <hr>
+</div>
+
+<table class="tabla">
+<tr>
+    <th>ID</th>
+    <td>{{ reporte.id }}</td>
+</tr>
+<tr>
+    <th>Tipo</th>
+    <td>{{ reporte.tipo }}</td>
+</tr>
+<tr>
+    <th>Nombre</th>
+    <td>{{ reporte.nombre_persona }}</td>
+</tr>
+<tr>
+    <th>Motivo</th>
+    <td>{{ reporte.motivo }}</td>
+</tr>
+<tr>
+    <th>Hora</th>
+    <td>{{ reporte.hora }}</td>
+</tr>
+<tr>
+    <th>Fecha</th>
+    <td>{{ reporte.fecha }}</td>
+</tr>
+</table>
+
+<div class="firmas">
+    <div class="firma">
+        <div class="linea"></div>
+        <p>Director(a)</p>
+    </div>
+
+    <div class="firma">
+        <div class="linea"></div>
+        <p>Orientador(a)</p>
+    </div>
+
+    <div class="firma">
+        <div class="linea"></div>
+        <p>Quien reporta</p>
+    </div>
+</div>
+
+</body>
+</html>
