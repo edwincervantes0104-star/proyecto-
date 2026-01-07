@@ -577,7 +577,7 @@ def eliminar_reporte(id):
 
     return redirect('/reportes')
 
-
+#Rutas nuevas pys
 
 # -----------------------------------------------------
 # 🔄 ACTUALIZACIÓN AUTOMÁTICA DE DATOS (JSON)
