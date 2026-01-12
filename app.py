@@ -4,6 +4,7 @@ import random
 import traceback
 import re
 from datetime import datetime, timedelta
+from flask import redirect
 
 from flask import (
     Flask, render_template, render_template_string, request, redirect,
@@ -217,7 +218,7 @@ def login():
             session['usuario'] = usuario['usuario']
             session['tipo_usuario'] = usuario['tipo_usuario']
             flash(f"Bienvenido {usuario['nombre']} ({usuario['tipo_usuario']})")
-            return redirect(url_for('menu'))
+            return redirect(url_for('dashboard'))
         else:
             flash('Datos incorrectos. Verifica tu número y contraseña.')
             return redirect(url_for('login'))
@@ -386,61 +387,39 @@ def nueva_contraseña():
         return redirect(url_for("login"))
 
     return render_template("nueva_contraseña.html")
-
-@app.route('/menu')
-def menu():
+@app.route('/menu') 
+def menu(): 
     return render_template('menu.html')
-
-@app.route("/dashboard")
+@app.route('/')
+def inicio():
+    return redirect('/dashboard')
+@app.route('/dashboard')
 def dashboard():
-    """Renderiza el panel principal (Dabohar)."""
-    if "usuario" not in session:
-        flash("Debes iniciar sesión para acceder al dashboard.", "warning")
-        return redirect(url_for("login"))
+    cursor = mysql.connection.cursor()
 
-    usuario = session.get("usuario") or session.get("usuario_nombre") or "Administrador"
+    cursor.execute("SELECT COUNT(*) AS total FROM alumnos")
+    total_alumnos = cursor.fetchone()['total']
 
-    try:
-        cur = mysql.connection.cursor()
-        cur.execute("SELECT COUNT(*) AS total FROM alumnos")
-        alumnos = cur.fetchone()["total"]
+    cursor.execute("SELECT COUNT(*) AS total FROM profesores")
+    total_profesores = cursor.fetchone()['total']
 
-        cur.execute("SELECT COUNT(*) AS total FROM profesores")
-        profesores = cur.fetchone()["total"]
+    cursor.execute("SELECT COUNT(*) AS total FROM directivos")
+    total_directivos = cursor.fetchone()['total']
 
-        cur.execute("SELECT COUNT(*) AS total FROM orientadores")
-        orientadores = cur.fetchone()["total"]
+    cursor.execute("SELECT COUNT(*) AS total FROM orientadores")
+    total_orientadores = cursor.fetchone()['total']
 
-        cur.execute("SELECT COUNT(*) AS total FROM directivos")
-        directivos = cur.fetchone()["total"]
+    cursor.close()
 
-        cur.execute("SELECT COUNT(*) AS total FROM materias")
-        materias = cur.fetchone()["total"]
+    return render_template(
+        'dashboard.html',
+        total_alumnos=total_alumnos,
+        total_profesores=total_profesores,
+        total_directivos=total_directivos,
+        total_orientadores=total_orientadores
+    )
 
-        cur.execute("SELECT COUNT(*) AS total FROM recursos")
-        recursos = cur.fetchone()["total"]
-        cur.close()
 
-    except Exception as e:
-        # Si no hay conexión o tablas, generamos datos falsos
-        print("⚠️ No se pudo obtener datos de MySQL:", e)
-        alumnos = random.randint(80, 150)
-        profesores = random.randint(10, 25)
-        orientadores = random.randint(3, 8)
-        directivos = random.randint(2, 5)
-        materias = random.randint(12, 30)
-        recursos = random.randint(5, 20)
-
-    data = {
-        "alumnos": alumnos,
-        "profesores": profesores,
-        "orientadores": orientadores,
-        "directivos": directivos,
-        "materias": materias,
-        "recursos": recursos,
-    }
-
-    return render_template_string(dashboard.html, usuario=usuario, data=data, datetime=datetime)
 # ===============================
 # RUTA PRINCIPAL DE REPORTES
 # ===============================

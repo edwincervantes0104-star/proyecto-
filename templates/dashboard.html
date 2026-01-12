@@ -2,198 +2,140 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard CECYTEM 🌿</title>
+    <title>Dashboard</title>
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        body {
-            background-color: #e8f5e9;
-            color: #1b5e20;
-            font-family: 'Segoe UI', sans-serif;
-        }
-        .navbar {
-            background-color: #2e7d32;
-        }
-        .navbar-brand, .navbar-text, .btn-light {
-            color: #fff !important;
-        }
-        .card {
-            border: none;
-            border-radius: 15px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        footer {
-            text-align: center;
-            margin-top: 40px;
-            color: #1b5e20;
-        }
-    </style>
+body {
+    background: linear-gradient(135deg, #e8f5e9, #f4f6f9);
+}
+
+.dashboard-title {
+    font-weight: bold;
+    color: #1b5e20;
+}
+
+.card {
+    border-radius: 18px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.15);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 28px rgba(0,0,0,.25);
+}
+
+.card h5 {
+    font-weight: bold;
+}
+
+.icon {
+    font-size: 38px;
+    margin-bottom: 5px;
+}
+</style>
+
 </head>
-
 <body>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid px-4">
-            <a class="navbar-brand fw-bold" href="#">🌿 CECYTEM Dashboard</a>
-            <div class="d-flex">
-                <span class="navbar-text me-3">Bienvenido, {{ usuario }}</span>
-                <a href="{{ url_for('logout') }}" class="btn btn-light btn-sm">Cerrar sesión</a>
-            </div>
-        </div>
-    </nav>
 
-    <!-- CONTENIDO -->
-    <div class="container py-5">
-        <h2 class="text-center text-success fw-bold mb-4">Resumen General del Sistema</h2>
+<div class="container mt-4">
 
-        <!-- TARJETAS -->
-        <div class="row g-4 mb-5">
-            {% for nombre, valor in data.items() %}
-            <div class="col-md-4 col-lg-4">
-                <div class="card p-4 text-center" style="background-color: #a5d6a7;">
-                    <div class="card-body">
-                        <h5 class="card-title text-uppercase">{{ nombre }}</h5>
-                        <p class="fs-2 fw-bold text-dark mb-0">{{ valor }}</p>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
+    <h2 class="text-center mb-4 dashboard-title">
+        📊 Panel de Control - CECYTEM
+    </h2>
+
+
+    <!-- TARJETAS -->
+    <div class="row g-4 text-center">
+        <div class="card bg-primary text-white">
+            🎓
+            <h5>Alumnos</h5>
+            <h2>{{ total_alumnos }}</h2>
         </div>
 
-        <!-- GRÁFICO DE BARRAS -->
-        <div class="card p-4 shadow-sm mb-5">
-            <h5 class="card-title text-success mb-3 text-center">📊 Distribución de Registros</h5>
-            <canvas id="chartResumen" height="100"></canvas>
-        </div>
 
-        <!-- GRÁFICO DE PASTEL -->
-        <div class="card p-4 shadow-sm">
-            <h5 class="card-title text-success mb-3 text-center">🥧 Porcentaje por Categoría</h5>
-            <canvas id="chartPie" height="100"></canvas>
+        {% if total_profesores is not none %}
+        <div class="card bg-success text-white">
+            👨‍🏫
+            <h5>Profesores</h5>
+            <h2>{{ total_profesores }}</h2>
         </div>
+        {% endif %}
 
-        <footer>
-            <p>© {{ datetime.utcnow().year }} CECYTEM | Panel Administrativo Verde 🌱</p>
-        </footer>
+        {% if total_directivos is not none %}
+        <div class="card bg-dark text-white">
+            🧑‍💼
+            <h5>Directivos</h5>
+            <h2>{{ total_directivos }}</h2>
+        </div>
+        {% endif %}
+
+        {% if total_orientadores is not none %}
+        <div class="card bg-warning text-dark">
+            🧭
+            <h5>Orientadores</h5>
+            <h2>{{ total_orientadores }}</h2>
+        </div>
+        {% endif %}
+
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- GRÁFICA -->
+    <div class="card mt-5 p-4">
+        <h5 class="text-center mb-3">📈 Resumen General</h5>
+        <canvas
+            id="grafica"
+            data-alumnos="{{ total_alumnos }}"
+            data-profesores="{{ total_profesores }}"
+            data-directivos="{{ total_directivos }}"
+            data-orientadores="{{ total_orientadores }}"
+        </canvas>
 
-    <script>
-        // ✅ Convertir el diccionario Python en objeto JS seguro
-        const dataDashboard = JSON.parse('{{ data | tojson | safe }}');
+    </div>
 
-        const coloresVerdes = [
-            '#81c784', '#66bb6a', '#43a047', '#2e7d32', '#1b5e20', '#a5d6a7'
-        ];
+    <!-- BOTÓN AL MENÚ -->
+    <div class="text-center mt-4">
+    <a href="{{ url_for('menu') }}">
+            📋 Ir al Menú
+    <a href="/login" class="link">Cerrar sesión</a>
 
-        // ===============================
-        // 📊 GRÁFICO DE BARRAS
-        // ===============================
-        const ctxBar = document.getElementById('chartResumen').getContext('2d');
-        let chartBar = new Chart(ctxBar, {
-            type: 'bar',
-            data: {
-                labels: ['Alumnos', 'Profesores', 'Orientadores', 'Directivos', 'Materias', 'Recursos'],
-                datasets: [{
-                    label: 'Totales',
-                    data: [
-                        dataDashboard.alumnos,
-                        dataDashboard.profesores,
-                        dataDashboard.orientadores,
-                        dataDashboard.directivos,
-                        dataDashboard.materias,
-                        dataDashboard.recursos
-                    ],
-                    backgroundColor: coloresVerdes,
-                    borderRadius: 8
-                }]
-            },
-            options: {
-                responsive: true,
-                scales: { y: { beginAtZero: true } },
-                plugins: {
-                    legend: { display: false },
-                    title: {
-                        display: true,
-                        text: 'Distribución de Registros',
-                        color: '#1b5e20',
-                        font: { size: 18 }
-                    }
-                }
-            }
-        });
+        </a>
+    </div>
 
-        // ===============================
-        // 🥧 GRÁFICO DE PASTEL
-        // ===============================
-        const ctxPie = document.getElementById('chartPie').getContext('2d');
-        let chartPie = new Chart(ctxPie, {
-            type: 'pie',
-            data: {
-                labels: ['Alumnos', 'Profesores', 'Orientadores', 'Directivos', 'Materias', 'Recursos'],
-                datasets: [{
-                    data: [
-                        dataDashboard.alumnos,
-                        dataDashboard.profesores,
-                        dataDashboard.orientadores,
-                        dataDashboard.directivos,
-                        dataDashboard.materias,
-                        dataDashboard.recursos
-                    ],
-                    backgroundColor: coloresVerdes,
-                    hoverOffset: 15
-                }]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: false
-                    },
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            color: '#1b5e20',
-                            font: { size: 14 }
-                        }
-                    }
-                }
-            }
-        });
+</div>
 
-        // ===============================
-        // 🔄 ACTUALIZACIÓN AUTOMÁTICA
-        // ===============================
-        setInterval(async () => {
-            try {
-                const response = await fetch('/dashboard/data');
-                const updated = await response.json();
+<!-- SCRIPT DE LA GRÁFICA -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-                const nuevosDatos = [
-                    updated.alumnos,
-                    updated.profesores,
-                    updated.orientadores,
-                    updated.directivos,
-                    updated.materias,
-                    updated.recursos
-                ];
+<script>
+const c = document.getElementById('grafica');
 
-                chartBar.data.datasets[0].data = nuevosDatos;
-                chartPie.data.datasets[0].data = nuevosDatos;
+const datos = [
+  Number(c.dataset.alumnos),
+  Number(c.dataset.profesores),
+  Number(c.dataset.directivos),
+  Number(c.dataset.orientadores),
+];
 
-                chartBar.update();
-                chartPie.update();
-            } catch (error) {
-                console.error('Error al actualizar los datos del gráfico:', error);
-            }
-        }, 10000);
-    </script>
+new Chart(c, {
+  type: 'bar',
+  data: {
+    labels: ['Alumnos','Profesores','Directivos','Orientadores','Materias'],
+    datasets: [{
+      label: 'Totales',
+      data: datos
+    }]
+  },
+  options: { responsive: true }
+});
+</script>
+
+
 </body>
 </html>

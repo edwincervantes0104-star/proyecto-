@@ -3,131 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Reportes</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/reportes.css') }}">
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f2f4f7;
-    margin: 0;
-    padding: 0;
-}
-.container {
-    width: 95%;
-    max-width: 1200px;
-    margin: 20px auto;
-}
-.card {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-label {
-    display: block;
-    margin-top: 10px;
-    font-weight: bold;
-}
-select, textarea, input, button {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    box-sizing: border-box;
-}
-button {
-    background: #4a6cf7;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
-}
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-table, th, td {
-    border: 1px solid #ccc;
-}
-th, td {
-    padding: 10px;
-    text-align: center;
-}
-th {
-    background: #f0f0f0;
-}
-.actions form {
-    display: inline-block;
-}
-.actions button {
-    width: auto;
-    padding: 5px 10px;
-}
-
-/* ================= IMPRESIÓN ================= */
-@media print {
-
-    body {
-        background: white;
-    }
-
-    .container {
-        width: 100%;
-        margin: 0;
-    }
-
-    .card {
-        border: none;
-        box-shadow: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    form, button {
-        display: none;
-    }
-
-    table {
-        font-size: 14px;
-    }
-
-    th {
-        background: #e6ecff !important;
-        color: black;
-    }
-
-    th, td {
-        border: 1px solid black;
-    }
-
-    body::before {
-        content: "COLEGIO DE ESTUDIOS CIENTÍFICOS Y TECNOLÓGICOS DEL ESTADO\nREPORTE DISCIPLINARIO";
-        white-space: pre;
-        display: block;
-        text-align: center;
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 25px;
-        border-bottom: 3px solid #2b4eff;
-        padding-bottom: 10px;
-    }
-
-    .firmas {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 60px;
-    }
-
-    .firma {
-        width: 30%;
-        text-align: center;
-    }
-
-    .linea {
-        border-top: 1px solid black;
-        margin-top: 60px;
-    }
-}
-</style>
 </head>
 
 <body>
@@ -166,7 +43,8 @@ th {
     <button type="submit">Guardar Reporte</button>
 </form>
 </div>
-
+<a href="{{ url_for('menu') }}">
+            📋 Ir al Menú
 <!-- ================= TABLA ================= -->
 <div class="card">
 <h2>📄 Reportes Registrados</h2>

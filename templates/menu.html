@@ -206,6 +206,15 @@
         <p style="color:#1b5e20; font-weight:bold;">Has iniciado como: {{ session['tipo_usuario']|capitalize }}</p>
       </div>
     </div>
+    <div style="position:absolute; top:20px; right:20px;">
+  <a href="{{ url_for('dashboard') }}"
+     style="background:#1b5e20; color:white;
+            padding:10px 18px; border-radius:30px;
+            text-decoration:none; font-weight:bold;">
+    ⬅ Dashboard
+  </a>
+</div>
+
   </header>
 
   <main class="menu-container">
@@ -256,7 +265,7 @@
 
       <!-- REPORTES -->
 <a href="/reportes" class="menu-item {% if rol not in ['directivo', 'profesor'] %}bloqueado{% endif %}">
-  <img src="{{ url_for('static', filename='img/reportes.png') }}" alt="Reportes">
+  <img src="{{ url_for('static', filename='img/reporte.png') }}" alt="Reportes">
   <h2>Reportes</h2>
 </a>
 
