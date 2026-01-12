@@ -1,0 +1,88 @@
+    
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f2f6f3;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        /* TARJETAS */
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            padding: 20px;
+            border-radius: 12px;
+            color: white;
+            text-align: center;
+            font-size: 18px;
+            box-shadow: 0 4px 10px rgba(0,0,0,.15);
+        }
+
+        .azul { background: #1976d2; }
+        .verde { background: #2e7d32; }
+        .gris { background: #263238; }
+        .amarillo { background: #fbc02d; color: black; }
+
+        /* GRAFICAS */
+        .graficas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .grafica {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,.1);
+            text-align: center;
+        }
+
+        canvas {
+            max-width: 100%;
+        }
+        .card {
+    width: 260px;
+    height: 100px;
+    border-radius: 14px;
+    padding: 20px;
+    color: white;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Color específico para reportes */
+.card.reportes {
+    background: linear-gradient(135deg, #6a1b9a, #8e24aa);
+}
+
+.card h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.card p {
+    margin: 5px 0 0;
+    font-size: 14px;
+    opacity: 0.9;
+}
